@@ -7,6 +7,8 @@ gem 'coffee-rails', '4.1.0'
 gem 'jquery-rails', '4.0.3'
 gem 'turbolinks',   '2.3.0'
 gem 'jbuilder',     '2.2.3'
+gem 'paperclip',    '4.3.6'
+gem 'acts-as-taggable-on',  '~> 3.4'
 gem 'sdoc',         '0.4.0', group: :doc
 
 group :development, :test do
