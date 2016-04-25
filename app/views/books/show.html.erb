@@ -11,8 +11,8 @@
 </p>
 
 <p>
-  <strong>Published:</strong>
-  <%= @book.published %>
+  <strong>Filename:</strong>
+  <%= @book.filename %>
 </p>
 
 <p>
@@ -21,8 +21,18 @@
 </p>
 
 <p>
+  <strong>Publisher:</strong>
+  <%= @book.publisher %>
+</p>
+
+<p>
   <strong>Cover:</strong>
   <%= @book.cover %>
+</p>
+
+<p>
+  <strong>Hash:</strong>
+  <%= @book.hash %>
 </p>
 
 <%= link_to 'Edit', edit_book_path(@book) %> |

@@ -3,13 +3,17 @@
 one:
   title: MyString
   author: MyString
-  published: 1
+  filename: MyString
   isbn: 1
+  publisher: MyString
   cover: MyString
+  hash: MyString
 
 two:
   title: MyString
   author: MyString
-  published: 1
+  filename: MyString
   isbn: 1
+  publisher: MyString
   cover: MyString
+  hash: MyString
