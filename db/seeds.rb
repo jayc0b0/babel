@@ -8,9 +8,36 @@
 
 require 'digest'
 
+# Create arrays for categorization
+book_type = ['pdf', 'epub', 'mobi', 'doc', 'docx', 'chm', 'azw3', 'azw',
+             'kf8', 'txt', 'rtf']
+comic_type = ['cbr', 'cbz', 'cbt', 'cba', 'cb7']
+
 Dir.foreach('books') do |item|
   next if item == '.' or item == '..'
+
+  # Automatically extract info from file 
+  ## Check extension and determine if comic or book
+  extension = File.extname(item)[1..-1]
+  if book_type.include? extension
+    category = 'book'
+  elsif comic_type.include? extension
+    category = 'comic'
+  else
+    next
+  end
+  ## Get filename
+  filename = File.basename(item, '.*')
+  
+  # Hash file contents
   file = "books/#{item}"
   sha256 = Digest::SHA256.file file
-  Book.create(filename: File.basename(item, '.*'), extension: File.extname(item)[1..-1], shahash: sha256.hexdigest)
+  shahash = sha256.hexdigest
+
+  # Create record for each book
+  Book.create(filename: filename, 
+              extension: extension,
+              category: category,
+              shahash: shahash)
+
 end
