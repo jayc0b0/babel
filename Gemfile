@@ -15,7 +15,7 @@ gem 'paperclip',    '4.3.6' # works with files
 gem 'acts-as-taggable-on',  '~> 3.4' # tagging
 gem 'obfuscate_id', '0.2.0' # obfuscates id's of elements
 gem 'listen',       '~> 3.0' # listens for filesystem changes
-gem 'pdf-reader',   '1.4.0' # parses pdfs
+gem 'docsplit',     '0.7.6' # parses pdfs
 gem 'epub-parser',  '0.2.5' # parses epubs
 
 # Based on gems from Rails Tutorial 3rd Edition

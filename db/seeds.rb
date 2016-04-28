@@ -34,10 +34,23 @@ Dir.foreach('books') do |item|
   sha256 = Digest::SHA256.file file
   shahash = sha256.hexdigest
 
+  # If pdf, parse contents with pdf-reader
+  if extension == 'pdf'
+    filename = File.expand_path(File.dirname(__FILE__)) + "/../books/" + item
+    #reader = PDF::Reader.new(filename)
+    # Search for copyright date
+    #copyright_regex = Regexp.new('©.*$')
+    copyright = nil
+    reader.pages do |page|
+      #copyright = page.text.scan(/©.*$/)
+    end
+  end
+
   # Create record for each book
   Book.create(filename: filename, 
               extension: extension,
               category: category,
+              published: copyright,
               shahash: shahash)
 
 end
