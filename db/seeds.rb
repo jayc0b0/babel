@@ -13,6 +13,27 @@ book_type = ['pdf', 'epub', 'mobi', 'doc', 'docx', 'chm', 'azw3', 'azw',
              'kf8', 'txt', 'rtf']
 comic_type = ['cbr', 'cbz', 'cbt', 'cba', 'cb7']
 
+# Define functions
+def pdf_parse_copyright(file_path)
+  copyright_regex = /Copyright.*$/
+  Docsplit.extract_text(file_path, {pdf_opts: '-layout',  
+                        pages: 1..10, 
+                        output: 'temp'})
+  Dir.foreach('temp') do |file|
+    next if file == '.' or file =='..'
+    filename = File.expand_path(File.dirname(__FILE__)) + "/../temp/" + file
+    f = File.open(filename, 'r+')
+    f.each_line do |line|
+      if line.match(copyright_regex)
+        return line[/\d\d\d\d/]
+      end
+    end
+    f.close
+  end
+
+  return nil
+end
+
 Dir.foreach('books') do |item|
   next if item == '.' or item == '..'
 
@@ -36,18 +57,24 @@ Dir.foreach('books') do |item|
 
   # If pdf, parse contents with docsplit
   if extension == 'pdf'
+    # Get file name of item
     file_path = File.expand_path(File.dirname(__FILE__)) + "/../books/" + item
-    #Docsplit.extract_text(file_path, {pdf_opts: '-layout',  
-    #  										pages: 0..5, 
-    #  										output: page_text})
+    
+    # Parse for copyright info and (hopefully) author and title
+    copyright = pdf_parse_copyright(file_path)
+
+    # Get length
     length = Docsplit.extract_length(file_path)
+  
+    # Delete temp folder
+    FileUtils.rm_rf('temp')
   end
 
   # Create record for each book
   Book.create(filename: filename, 
               extension: extension,
               category: category,
-              #published: copyright,
+              published: copyright,
               length: length,
               shahash: shahash)
 
