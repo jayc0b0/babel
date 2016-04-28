@@ -34,23 +34,21 @@ Dir.foreach('books') do |item|
   sha256 = Digest::SHA256.file file
   shahash = sha256.hexdigest
 
-  # If pdf, parse contents with pdf-reader
+  # If pdf, parse contents with docsplit
   if extension == 'pdf'
-    filename = File.expand_path(File.dirname(__FILE__)) + "/../books/" + item
-    #reader = PDF::Reader.new(filename)
-    # Search for copyright date
-    #copyright_regex = Regexp.new('©.*$')
-    copyright = nil
-    reader.pages do |page|
-      #copyright = page.text.scan(/©.*$/)
-    end
+    file_path = File.expand_path(File.dirname(__FILE__)) + "/../books/" + item
+    #Docsplit.extract_text(file_path, {pdf_opts: '-layout',  
+    #  										pages: 0..5, 
+    #  										output: page_text})
+    length = Docsplit.extract_length(file_path)
   end
 
   # Create record for each book
   Book.create(filename: filename, 
               extension: extension,
               category: category,
-              published: copyright,
+              #published: copyright,
+              length: length,
               shahash: shahash)
 
 end
