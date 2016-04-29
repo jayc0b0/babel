@@ -40,9 +40,9 @@ Dir.foreach('books') do |item|
     # Get file name of item
     file_path = File.expand_path(File.dirname(__FILE__)) + "/../books/" + item
     
-    # Parse for copyright info and (hopefully) author and title
-    copyright = ParsePDF.copyright(file_path)
-    author = ParsePDF.author(file_path)
+    # Parse for ISBN to fetch data
+    ## Grab ISBN and pass to ParsePDF
+    isbn = ParsePDF.isbn(file_path)
 
     # Get length
     length = Docsplit.extract_length(file_path)
@@ -53,10 +53,11 @@ Dir.foreach('books') do |item|
 
   # Create record for each book
   Book.create(filename: filename, 
-              author: author,
+              # author: author,
               extension: extension,
               category: category,
-              published: copyright,
+              isbn: isbn,
+              # published: copyright,
               length: length,
               shahash: shahash)
 
