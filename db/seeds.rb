@@ -42,6 +42,7 @@ Dir.foreach('books') do |item|
     
     # Parse for copyright info and (hopefully) author and title
     copyright = ParsePDF.copyright(file_path)
+    author = ParsePDF.author(file_path)
 
     # Get length
     length = Docsplit.extract_length(file_path)
@@ -52,6 +53,7 @@ Dir.foreach('books') do |item|
 
   # Create record for each book
   Book.create(filename: filename, 
+              author: author,
               extension: extension,
               category: category,
               published: copyright,

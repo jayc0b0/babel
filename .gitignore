@@ -21,3 +21,6 @@ book/
 
 # Ignore any remaining temp files
 temp/
+
+# Ignore ISBNDB API Keys File
+config/isbndb.yml
