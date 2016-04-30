@@ -36,6 +36,8 @@ Dir.foreach('books') do |item|
   sha256 = Digest::SHA256.file file
   shahash = sha256.hexdigest
 
+  info = Array.new
+
   # If pdf, parse contents with docsplit
   if extension == 'pdf'
     # Get file name of item
@@ -49,8 +51,6 @@ Dir.foreach('books') do |item|
     set = ISBNdb::Query.find_book_by_isbn(isbn).first
     
     # Read information into array
-    info = Array.new
-
     info[0] = set.title 
     info[1] = set.authors_text 
     info[2] = set.publisher_name 
