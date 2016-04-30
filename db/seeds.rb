@@ -8,6 +8,7 @@
 
 require 'digest'
 require 'parse_pdf'
+require 'isbndb'
 
 # Create arrays for categorization
 book_type = ['pdf', 'epub', 'mobi', 'doc', 'docx', 'chm', 'azw3', 'azw',
@@ -21,9 +22,9 @@ Dir.foreach('books') do |item|
   ## Check extension and determine if comic or book
   extension = File.extname(item)[1..-1]
   if book_type.include? extension
-    category = 'book'
+    booktype = 'book'
   elsif comic_type.include? extension
-    category = 'comic'
+    booktype = 'comic'
   else
     next
   end
@@ -41,8 +42,19 @@ Dir.foreach('books') do |item|
     file_path = File.expand_path(File.dirname(__FILE__)) + "/../books/" + item
     
     # Parse for ISBN to fetch data
-    ## Grab ISBN and pass to ParsePDF
+    ## Grab ISBN and pass to ISBNdb gem
     isbn = ParsePDF.isbn(file_path)
+
+    # Start fetching information
+    set = ISBNdb::Query.find_book_by_isbn(isbn).first
+    
+    # Read information into array
+    info = Array.new
+
+    info[0] = set.title 
+    info[1] = set.authors_text 
+    info[2] = set.publisher_name 
+    info[4] = set.subject_ids 
 
     # Get length
     length = Docsplit.extract_length(file_path)
@@ -53,11 +65,13 @@ Dir.foreach('books') do |item|
 
   # Create record for each book
   Book.create(filename: filename, 
-              # author: author,
+              title: info.at(0),
+              author: info.at(1),
               extension: extension,
-              category: category,
+              category: info.at(3),
               isbn: isbn,
-              # published: copyright,
+              publisher: info.at(2),
+              booktype: booktype,
               length: length,
               shahash: shahash)
 

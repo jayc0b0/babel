@@ -9,11 +9,12 @@
       <th>Author</th>
       <th>Length</th>
       <th>Filename</th>
-      <th>Extension</th>
+      <th>Extension</th> 
       <th>Category</th>
       <th>Isbn</th>
       <th>Publisher</th>
       <th>Published</th>
+      <th>Category</th>
       <th>Cover</th>
       <th>Hash</th>
       <th colspan="3"></th>
@@ -32,6 +33,7 @@
         <td><%= book.isbn %></td>
         <td><%= book.publisher %></td>
         <td><%= book.published %></td>
+        <td><%= book.booktype %></td>
         <td><%= book.cover %></td>
         <td><%= book.hash %></td>
         <td><%= link_to 'Show', book %></td>
