@@ -17,6 +17,7 @@ class ParsePDF
           isbn.downcase!
           isbn.slice!(':')
           isbn.slice!('isbn')
+          isbn.tr!('-','')
           isbn.strip!
           return isbn
         end
