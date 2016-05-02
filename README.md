@@ -9,6 +9,9 @@ needs to be done.
 
 As of now, this looks as follows:
 
+More timely development info can be found [here](https://oasis.sandstorm.io/shared/TfyswbVN0sr_Wo1NZ5gC37g3dkXpi_rDin_0H8oLP6F).
+If you would like to contribute to the board or make a request, please open an issue or pull request.
+
 **Base functionality**
 * Initial database schema
   * Book Table
