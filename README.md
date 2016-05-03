@@ -1,6 +1,6 @@
 # babel: a library for all
 
-![alt text](https://img.shields.io/badge/Version-Pre--Release-blue.svg "Verion number")
+![Version number](https://img.shields.io/badge/Version-Pre--Release-blue.svg)
 
 ## About
 
