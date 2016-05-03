@@ -41,4 +41,6 @@ Most of Babel is still pretty early in development, but if you'd like to help ou
 
 1. Clone this repository
 2. Run 'bundle install' to get the gems all set up
-3. Get an ISBNDB API key and put it in config/isbndb.yml (I don't want you freeloading off of my API key. :p)
+3. Create a folder in the project root directory called 'books' and put your files in there.
+4. Get an ISBNDB API key and put it in config/isbndb.yml as detailed [here](https://github.com/sethvargo/isbndb#basic-setup)
+(I don't want to share my API key for obvious security reasons. Also, I don't want you mooching. :p)
