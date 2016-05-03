@@ -46,3 +46,4 @@ Most of Babel is still pretty early in development, but if you'd like to help ou
 3. Create a folder in the project root directory called 'books' and put your files in there.
 4. Get an ISBNDB API key and put it in config/isbndb.yml as detailed [here](https://github.com/sethvargo/isbndb#basic-setup)
 (I don't want to share my API key for obvious security reasons. Also, I don't want you mooching. :p)
+(Please note that the base keys that you get from ISBNDB allow only 500 requests per day.)
