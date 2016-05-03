@@ -6,7 +6,7 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-require 'add_file'
+require 'file_ops'
 
 Dir.foreach('books') do |item|
   next if item == '.' or item == '..'
