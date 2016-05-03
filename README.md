@@ -1,5 +1,7 @@
 # babel: a library for all
 
+![alt text](https://img.shields.io/badge/Version-Pre--Release-blue.svg "Verion number")
+
 ## About
 
 Babel is a webapp, built in Rails, and essentially like the offspring of Plex (In its ability to be a repository of media
