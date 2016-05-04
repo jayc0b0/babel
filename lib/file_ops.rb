@@ -56,27 +56,31 @@ def add_book(item)
     end
 
     # Sanitization of data
-    ## Clean up author names (ADD THIS)
+    ## Clean up author names
+    author = info.at(1)
+    author = author.split(",", 2)
+    author = author.at(0).split("and", 2)
+    author = author.at(0)
 
     # Get length
     length = Docsplit.extract_length(file_path)
+
+    # Rename file
+    ## Set filename to title
+    filename = info.at(0)
+    ## Make filename lowercase
+    filename = filename.downcase
+    ## Replace nonword chars with
+    ## underscores (standard delimiter)
+    filename.gsub!(/\W+/, '_')
+    ## Shovel '.ext' onto the end
+    filename << ".#{extension}"
+    ## Rename file
+    File.rename("books/#{item}", "books/#{filename}")
   
     # Delete temp folder
     FileUtils.rm_rf('temp')
   end
-
-  # Rename file
-  ## Set filename to title
-  filename = info.at(0)
-  ## Make filename lowercase
-  filename = filename.downcase
-  ## Replace nonword chars with
-  ## underscores (standard delimiter)
-  filename.gsub!(/\W+/, '_')
-  ## Shovel '.ext' onto the end
-  filename << ".#{extension}"
-  ## Rename file
-  File.rename("books/#{item}", "books/#{filename}")
 
   # Create record for each book
   Book.create(filename: filename, 
@@ -87,14 +91,14 @@ def add_book(item)
               length: length,
               shahash: shahash,
               title: info.at(0),
-              author: info.at(1),
+              author: author,
               publisher: info.at(2),
               category: info.at(3))
 
   # Prints relevant info to console
   puts "\ntitle: #{info.at(0)}"
   puts "isbn10: #{isbn}"
-  puts "authors: #{info.at(1)}"
+  puts "authors: #{author}"
   puts "publisher: #{info.at(2)}"
   puts "subjects: #{info.at(3)}"
   puts "filename: #{filename}"
