@@ -21,62 +21,54 @@ def add_book(item)
     return nil
   end
 
+  ## Say what you're processing
+  puts "\nProcessing: #{item}"
+
   ## Get filename
   filename = File.basename(item, '.*')
-  ## Convert to lowercase
   
   ## Hash file contents
   file = "books/#{filename}.#{extension}"
   shahash = Digest::SHA256.hexdigest File.read file
 
-  # Array for book info
+  ## Array for book info
   info = Array.new
+
+  ## Get file name of item
+  file_path = File.expand_path(File.dirname(__FILE__)) + "/../books/" + item
 
   ## If pdf, parse contents with docsplit
   if extension == 'pdf'
-    # Get file name of item
-    file_path = File.expand_path(File.dirname(__FILE__)) + "/../books/" + item
-
     # Get copyright date
     copyright = ParsePDF.copyright(file_path)
     
     # Parse for ISBN to fetch data
-    ## Grab ISBN and pass to ISBNdb gem
     isbn = ParsePDF.isbn(file_path)
-
-    ## Start fetching information
-    results = ISBNdb::Query.find_book_by_isbn(isbn)
-    
-    ## Read information into array
-    results.each do |result|
-      info[0] = result.title 
-      info[1] = result.authors_text 
-      info[2] = result.publisher_name 
-      info[4] = result.subject_ids 
-    end
-
-    # Sanitization of data
-    ## Clean up author names
-    author = info.at(1)
-    author = author.split(",", 2)
-    author = author.at(0).split("and", 2)
-    author = author.at(0)
 
     # Get length
     length = Docsplit.extract_length(file_path)
 
-    # Rename file
-    ## Set filename to title
-    filename = info.at(0)
-    ## Make filename lowercase
-    filename = filename.downcase
-    ## Replace nonword chars with
-    ## underscores (standard delimiter)
-    filename.gsub!(/\W+/, '_')
-    ## Shovel '.ext' onto the end
-    filename << ".#{extension}"
-    ## Rename file
-    File.rename("books/#{item}", "books/#{filename}")
+    # Default values
+    title = nil
+    author = nil
+    publisher = nil
+    category = nil
+
+    # Operations dependent on isbn
+    if isbn != nil
+      ## Info grab
+      info = fetch_info(isbn)
+      title = info.at(0)
+      author = info.at(1)
+      publisher = info.at(2)
+      category = info.at(3)
+
+      ## Clean up author names
+      author = author_fix(info.at(1)) unless info == -1
+
+      ## Rename file
+      filename = file_rename(item, info.at(0), extension) unless info == -1
+    end
   
     # Delete temp folder
     FileUtils.rm_rf('temp')
@@ -90,17 +82,66 @@ def add_book(item)
               booktype: booktype,
               length: length,
               shahash: shahash,
-              title: info.at(0),
+              title: title,
               author: author,
-              publisher: info.at(2),
-              category: info.at(3))
+              publisher: publisher,
+              category: category)
 
   # Prints relevant info to console
-  puts "\ntitle: #{info.at(0)}"
+  puts "\ntitle: #{title}"
   puts "isbn10: #{isbn}"
   puts "authors: #{author}"
-  puts "publisher: #{info.at(2)}"
-  puts "subjects: #{info.at(3)}"
+  puts "publisher: #{publisher}"
+  puts "subjects: #{category}"
   puts "filename: #{filename}"
   puts "hash: #{shahash}"
+end
+
+# Fetch info and return as array
+def fetch_info(isbn)
+  ## Create array
+  info = Array.new
+
+  ## Start fetching information
+  results = ISBNdb::Query.find_book_by_isbn(isbn)
+  
+  # Check if any results were fetched
+  if not results.first.title.nil?
+    ## Read information into array
+    results.each do |result|
+      info[0] = result.title 
+      info[1] = result.authors_text 
+      info[2] = result.publisher_name 
+      info[4] = result.subject_ids 
+    end
+
+    ## Return array
+    return info
+  else
+    return -1
+  end
+end
+
+# Clean author name
+def author_fix(author)
+  author = author.split(",", 2)
+  author = author.at(0).split("and", 2)
+  author = author.at(0)
+  return author
+end
+
+# Rename file
+def file_rename(original_name, title, extension)
+  ## Set filename to title
+  filename = title
+  ## Make filename lowercase
+  filename = filename.downcase
+  ## Replace nonword chars with
+  ## underscores (standard delimiter)
+  filename.gsub!(/\W+/, '_')
+  ## Shovel '.ext' onto the end
+  filename << ".#{extension}"
+  ## Rename file
+  File.rename("books/#{original_name}", "books/#{filename}")
+  return filename
 end
