@@ -17,6 +17,7 @@ gem 'obfuscate_id', '0.2.0' # obfuscates id's of elements
 gem 'listen',       '~> 3.0' # listens for filesystem changes
 gem 'docsplit',     '0.7.6' # parses pdfs
 gem 'epub-parser',  '0.2.5' # parses epubs
+gem 'isbn',         '2.0.10' # isbn processing
 gem 'isbndb',       '2.0.2' # fetches book info
 gem 'devise',       '4.1.0' # authentication
 gem 'cancan',       '1.6.10'# authorization
