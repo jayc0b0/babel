@@ -25,11 +25,13 @@ def add_book(item)
   puts "\nProcessing: #{item}"
 
   ## Get filename
+  puts "\nGetting basename..."
   filename = File.basename(item, '.*')
   
   ## Hash file contents
-  file = "books/#{filename}.#{extension}"
-  shahash = Digest::SHA256.hexdigest File.read file
+  puts "\nHashing file..."
+  file = "books/#{item}"
+  hash = Digest::MD5.file(file)
 
   ## Array for book info
   info = Array.new
@@ -58,16 +60,16 @@ def add_book(item)
     if isbn != nil
       ## Info grab
       info = fetch_info(isbn)
-      title = info.at(0)
-      author = info.at(1)
-      publisher = info.at(2)
-      category = info.at(3)
+				title = info.at(0) 
+				author = info.at(1) 
+				publisher = info.at(2) 
+				category = info.at(3)
 
       ## Clean up author names
-      author = author_fix(info.at(1)) unless info == -1
+      author = author_fix(info.at(1)) unless info.at(1) == nil
 
       ## Rename file
-      filename = file_rename(item, info.at(0), extension) unless info == -1
+      filename = file_rename(item, info.at(0), extension) unless info.at(0) == nil
     end
   
     # Delete temp folder
@@ -81,7 +83,7 @@ def add_book(item)
               published: copyright,
               booktype: booktype,
               length: length,
-              shahash: shahash,
+              shahash: hash,
               title: title,
               author: author,
               publisher: publisher,
@@ -94,7 +96,7 @@ def add_book(item)
   puts "publisher: #{publisher}"
   puts "subjects: #{category}"
   puts "filename: #{filename}"
-  puts "hash: #{shahash}"
+  puts "hash: #{hash}"
 end
 
 # Fetch info and return as array
@@ -106,7 +108,7 @@ def fetch_info(isbn)
   results = ISBNdb::Query.find_book_by_isbn(isbn)
   
   # Check if any results were fetched
-  if not results.first.title.nil?
+  if not results.first.nil?
     ## Read information into array
     results.each do |result|
       info[0] = result.title 
@@ -114,12 +116,15 @@ def fetch_info(isbn)
       info[2] = result.publisher_name 
       info[4] = result.subject_ids 
     end
-
-    ## Return array
-    return info
   else
-    return -1
+    info[0] = nil
+		info[1] = nil
+		info[2] = nil
+		info[3] = nil
   end
+
+	## Return array
+	return info
 end
 
 # Clean author name
