@@ -11,6 +11,7 @@ gem 'jbuilder',     '2.2.3'
 gem 'sdoc',         '0.4.0', group: :doc
 
 # Gems I've added
+gem 'bootstrap-sass', '~> 3.3.6' # bootstrap (frontend)
 gem 'paperclip',    '4.3.6' # works with files
 gem 'acts-as-taggable-on',  '~> 3.4' # tagging
 gem 'obfuscate_id', '0.2.0' # obfuscates id's of elements
