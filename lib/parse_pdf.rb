@@ -2,11 +2,11 @@ class ParsePDF
 
   # Parse for ISBN in first 10 pages 
   def self.isbn(file_path)
-    puts"\nBeginning text extraction..."
+    puts "Beginning text extraction..."
     Docsplit.extract_text(file_path, {pdf_opts: '--no-ocr --no-clean',  
                           pages: 1..10, 
                           output: 'temp'})
-    puts "\nProcessed pdf into text"
+    puts "Parsing for ISBN..."
     Dir.foreach('temp') do |file|
       next if file == '.' or file =='..'
       filename = File.expand_path(File.dirname(__FILE__)) + "/../temp/" + file
@@ -19,7 +19,7 @@ class ParsePDF
 						# Clean up isbn
 						isbn.tr!('-','')
 						isbn.strip!
-            puts "\nFound ISBN"
+            puts "ISBN found!"
 						return isbn
           end
         rescue
@@ -28,7 +28,7 @@ class ParsePDF
       f.close
     end
     # Return nil if nothing is found
-    puts "\nNo ISBN found"
+    puts "No ISBN found :("
     return nil
   end
 

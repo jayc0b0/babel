@@ -25,13 +25,17 @@ def add_book(item)
   puts "\nProcessing: #{item}"
 
   ## Get filename
-  puts "\nGetting basename..."
+  puts "Getting basename..."
   filename = File.basename(item, '.*')
   
   ## Hash file contents
-  puts "\nHashing file..."
-  file = "books/#{item}"
-  hash = Digest::MD5.file(file)
+  puts "Hashing file..."
+  file = Dir::pwd + "/books/\"#{item}\""
+  java_hash = "md5"
+  hash = nil
+  Dir::chdir("lib/") do
+    hash = %x{java #{java_hash} #{file}}
+  end
 
   ## Array for book info
   info = Array.new
@@ -42,12 +46,15 @@ def add_book(item)
   ## If pdf, parse contents with docsplit
   if extension == 'pdf'
     # Get copyright date
+    puts "Finding Copyright date..."
     copyright = ParsePDF.copyright(file_path)
     
     # Parse for ISBN to fetch data
+    puts "Parsing for ISBN..."
     isbn = ParsePDF.isbn(file_path)
 
     # Get length
+    puts "Calculating length..."
     length = Docsplit.extract_length(file_path)
 
     # Default values
@@ -59,6 +66,7 @@ def add_book(item)
     # Operations dependent on isbn
     if isbn != nil
       ## Info grab
+      puts "Fetching book info..."
       info = fetch_info(isbn)
 				title = info.at(0) 
 				author = info.at(1) 
@@ -66,9 +74,11 @@ def add_book(item)
 				category = info.at(3)
 
       ## Clean up author names
+      puts "Cleaning author name..."
       author = author_fix(info.at(1)) unless info.at(1) == nil
 
       ## Rename file
+      puts "Renaming file..."
       filename = file_rename(item, info.at(0), extension) unless info.at(0) == nil
     end
   
@@ -83,7 +93,7 @@ def add_book(item)
               published: copyright,
               booktype: booktype,
               length: length,
-              shahash: hash,
+              md5hash: hash,
               title: title,
               author: author,
               publisher: publisher,
